@@ -35,4 +35,70 @@
 &trans                &none         &none           &kp UP_ARROW    &none            &kp END                  &kp RIGHT_PARENTHESIS &kp KP_N7     &kp KP_N8        &kp KP_N9     &kp KP_MINUS     &none
 &trans                &none         &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &kp PAGE_UP              &kp PERCENT           &kp KP_N4     &kp KP_N5        &kp KP_N6     &kp KP_PLUS      &none
 &trans                &none         &none           &none           &none            &kp PAGE_DOWN            &kp COMMA             &kp KP_N1     &kp KP_N2        &kp KP_N3     &kp KP_ENTER     &trans
-&trans                &kp CAPS      &none           &none           &none                                                           &kp KP_N0     &kp KP_N0        &kp KP_DOT    &kp KP_ENTER
+&trans                &kp CAPS      &none           &none           &none                                                           &kp KP_N0     &kp KP_N0        &kp KP_DOT    &kp KP_ENTER     &trans
+                                                                                     &trans  &trans  &trans   &trans                &trans        &trans
+                                                                                     &trans  &trans  &trans   &trans                &trans        &trans
+            >;
+        };
+
+        Keyboard_Control_Layer {
+            bindings = <
+&bt BT_CLR   &none            &none            &none            &none            &none                  &none  &none  &none  &none  &none  &bt BT_CLR_ALL
+&none        &none            &none            &none            &none            &none                  &none  &none  &none  &none  &none  &none
+&none        &rgb_ug RGB_SPI  &rgb_ug RGB_SAI  &rgb_ug RGB_HUI  &rgb_ug RGB_BRI  &rgb_ug RGB_TOG        &none  &none  &none  &none  &none  &none
+&bootloader  &rgb_ug RGB_SPD  &rgb_ug RGB_SAD  &rgb_ug RGB_HUD  &rgb_ug RGB_BRD  &rgb_ug RGB_EFF        &none  &none  &none  &none  &none  &bootloader
+&sys_reset   &none            &none            &none            &none            &none                  &none  &none  &none  &none  &none  &sys_reset
+&none        &none            &none            &none            &none                                          &none  &none  &none  &none  &to 4
+                                                                &bt BT_SEL 2     &bt BT_SEL 3  &bt BT_SEL 4   &none  &none  &none
+                                                                &bt BT_SEL 0     &bt BT_SEL 1  &out OUT_USB   &out OUT_BLE  &none  &none
+            >;
+        };
+
+        Auto_Mouse_Layer {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans                  &trans            &trans     &trans     &trans     &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                  &trans            &trans     &trans     &trans     &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                  &kp C_AC_FORWARD  &trans     &trans     &trans     &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                  &kp C_AC_BACK     &mkp LCLK  &mkp MCLK  &mkp RCLK  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                  &trans            &trans     &trans     &trans     &trans  &trans
+&trans  &trans  &trans  &trans  &trans                                            &trans     &trans     &trans     &trans  &trans
+                                        &trans  &trans  &trans  &trans            &trans     &trans
+                                        &trans  &trans  &trans  &trans            &trans     &trans
+            >;
+        };
+
+        factory_test {
+            bindings = <
+&kp N0  &kp N1  &kp N2  &kp N3  &kp N4  &kp N5                  &kp N6  &kp N7  &kp N8  &kp N9  &kp N0  &kp N1
+&kp N2  &kp N3  &kp N4  &kp N5  &kp N6  &kp N7                  &kp N8  &kp N9  &kp N0  &kp N1  &kp N2  &kp N3
+&kp N4  &kp N5  &kp N6  &kp N7  &kp N8  &kp N9                  &kp N0  &kp N1  &kp N2  &kp N3  &kp N4  &kp N5
+&kp N6  &kp N7  &kp N8  &kp N9  &kp N0  &kp N1                  &kp N2  &kp N3  &kp N4  &kp N5  &kp N6  &kp N7
+&kp N8  &kp N9  &kp N0  &kp N1  &kp N2  &kp N3                  &kp N4  &kp N5  &kp N6  &kp N7  &kp N8  &kp N9
+&kp N0  &kp N1  &kp N2  &kp N3  &kp N4                                  &kp N6  &kp N7  &kp N8  &kp N9  &kp N0
+                                        &kp N1  &kp N2  &kp N3  &kp N4  &kp N5  &kp N6
+                                        &kp N7  &kp N8  &kp N9  &kp N0  &kp N1  &kp N2
+            >;
+        };
+    };
+};
+
+/* --- Trackball Configuration --- */
+
+// Right-Hand Trackball (Peripheral) - Controls scrolling
+&trackball_peripheral_listener {
+    input-processors =
+        // Multiply sensitivity by 1, divide by 128 (slower)
+        <&zip_xy_scaler 1 128>,
+        // Map trackball movement to scroll wheel events
+        <&zip_xy_to_scroll_mapper>,
+        // Invert vertical scrolling (natural scrolling)
+        <&zip_scroll_transform INPUT_TRANSFORM_Y_INVERT>;
+};
+
+// Left-Hand Trackball (Central) - Controls cursor and activates mouse layer
+&trackball_central_listener {
+    input-processors = <
+        // Activate layer 3 for 750ms after the trackball moves
+        &zip_temp_layer 3 750
+    >;
+};
